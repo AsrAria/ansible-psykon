@@ -1,0 +1,19 @@
+- name: run web server
+  docker_container:
+    name: web_server
+    image: "{{ web_server_path }}"
+    restart_policy: always
+    volumes:
+      - "{{ data_path }}/files:/data/files"
+      - "{{ data_path }}/letsencrypt/etc:/etc/letsencrypt"
+      - "{{ data_path }}/letsencrypt/var:/var/lib/letsencrypt"
+      - "{{ data_path }}/letsencrypt/challenge:/data/letsencrypt/challenge"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - name: internal_network
+        aliases:
+          - ngnix
+    networks_cli_compatible: yes
+    restart: yes

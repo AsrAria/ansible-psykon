@@ -1,0 +1,12 @@
+- name: start redis db
+  docker_container:
+    name: redis
+    image: redis:5.0.6
+    restart_policy: always
+    volumes:
+      - "{{ data_path }}/redis:/data"
+    networks:
+      - name: internal_network
+        aliases:
+          - redis
+    networks_cli_compatible: yes

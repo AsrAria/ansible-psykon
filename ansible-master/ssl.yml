@@ -1,0 +1,24 @@
+- hosts: servers
+
+  tasks:
+    - name: create ssl certificates
+      docker_container:
+        name: certbot
+        image: certbot/certbot
+        volumes:
+          - "{{ data_path }}/letsencrypt/etc:/etc/letsencrypt"
+          - "{{ data_path }}/letsencrypt/var:/var/lib/letsencrypt"
+          - "{{ data_path }}/letsencrypt/log:/var/log/letsencrypt"
+        command:
+          - certonly --standalone --email {{ email }} --agree-tos --no-eff-email -d {{ item }} -n
+        ports:
+          - "80:80"
+          - "443:443"
+      ignore_errors: yes
+      with_items: "{{ domains }}"
+
+    - name: set cron job to renew certificate
+      cron:
+        name: renew_cert
+        special_time: weekly
+        job: docker run -t --rm -v {{ data_path }}/letsencrypt/etc:/etc/letsencrypt -v {{ data_path }}/letsencrypt/var:/var/lib/letsencrypt -v {{ data_path }}/letsencrypt/challenge:/data/letsencrypt/challenge certbot/certbot renew --webroot --webroot-path=/data/letsencrypt/challenge && docker container restart web_server

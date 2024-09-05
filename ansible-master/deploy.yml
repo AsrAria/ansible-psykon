@@ -1,0 +1,4 @@
+- name: Import build playbook
+  import_playbook: build.yml
+- name: Start containers
+  import_playbook: start.yml
