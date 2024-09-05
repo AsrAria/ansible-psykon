@@ -1,0 +1,20 @@
+[servers]
+psykon_development
+
+[servers:vars]
+ansible_become=true
+ansible_user=root
+setup_stage=/tmp
+base_server_path=base_server
+web_server_path=final_web_server
+build_steps=["{{ base_server_path }}", "base_app", "final_app", "{{ web_server_path }}"]
+start_steps=["mongo", "redis", "app", "web_server"]
+stop_steps=["web_server", "app", "redis", "mongo"]
+git_base_address=git@git.app-helpers.ir:psykon
+deployment_branch=development
+deployment_path={{ deployment_branch }}
+deployment_file={{ deployment_branch }}
+domains=["panel-dev.psykon.ca", "api-dev.psykon.ca", "doc-dev.psykon.ca", "admin-dev.psykon.ca"]
+data_path=/data
+email=ppsykon@gmail.com
+mongodb_password=

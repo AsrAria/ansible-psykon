@@ -1,0 +1,18 @@
+- hosts: servers
+
+  tasks:
+    - include_tasks: tasks/setup.yml
+
+    - name: build docker images
+      docker_image:
+        name: "{{ item }}"
+        build:
+          path: "{{ setup_stage }}/dockerfiles/{{ item }}"
+          pull: no
+          nocache: yes
+        source: build
+        debug: yes
+        force_tag: yes
+        force_absent: yes
+        force_source: yes
+      with_items: "{{ build_steps }}"
