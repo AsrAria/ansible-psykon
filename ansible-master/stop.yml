@@ -1,8 +1,0 @@
-- hosts: servers
-
-  tasks:
-    - name: stop app containers
-      docker_container:
-        name: "{{ item }}"
-        state: stopped
-      with_items: "{{ stop_steps }}"
